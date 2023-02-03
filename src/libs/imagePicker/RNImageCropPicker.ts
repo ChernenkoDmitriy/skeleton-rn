@@ -1,35 +1,60 @@
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker';
 import { PERMISSIONS, check, RESULTS, openSettings, } from 'react-native-permissions';
-import { ICropedImage } from './IImagePicker/ICropedImage';
-import { IPickImage } from './IImagePicker/IPickImage';
-import { IPickImageOptions } from './IImagePicker/IPickImageOptions';
 
-class RNImageCropPicker implements IPickImage {
-    
-    private getPermission = async () => {
-        PERMISSIONS.ANDROID;
+class RNImageCropPicker {
+
+    private getCameraPermission = async () => {
+        const permissionsStatus = await check(PERMISSIONS.IOS.CAMERA);
+        switch (permissionsStatus) {
+            case RESULTS.BLOCKED:
+                await openSettings();
+                break;
+        };
+    };
+
+    private getGalleryPermission = async () => {
         const permissionsStatus = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
         switch (permissionsStatus) {
             case RESULTS.BLOCKED:
                 await openSettings();
                 break;
-        }
+        };
     };
 
-    onOpenPicker = async (options: IPickImageOptions = {}) => {
+    onOpenPicker = async (options: Options = {}) => {
         try {
-            await this.getPermission();
+            await this.getGalleryPermission();
             const result: any = await ImagePicker.openPicker({
                 includeBase64: true,
                 compressImageQuality: 0.4,
                 forceJpg: true,
-                width: 300,
-                height: 400,
+                cropping: true,
+                width: 800,
+                height: 800,
                 ...options
-             });
-            return { ...result } as ICropedImage;
+            });
+            return { ...result } as ImageOrVideo;
         } catch (error) {
             console.warn('RNImageCropPicker -> onOpenPicker: ', error);
+            return null;
+        }
+    };
+
+    onOpenCamera = async (options: Options = {}) => {
+        try {
+            await this.getCameraPermission();
+            const result: any = await ImagePicker.openCamera({
+                width: 600,
+                height: 800,
+                cropping: true,
+                includeBase64: true,
+                compressImageQuality: 0.4,
+                forceJpg: true,
+                ...options
+            });
+            return { ...result } as ImageOrVideo;
+        } catch (error) {
+            console.warn('RNImageCropPicker -> onOpenCamera: ', error);
             return null;
         }
     };

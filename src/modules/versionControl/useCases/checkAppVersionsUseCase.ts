@@ -1,10 +1,10 @@
 import { Platform } from "react-native";
 import { requester } from "../../../libs/requester";
-import { links } from "../../../utils/Links";
 import semver from 'semver';
 import { getVersion } from 'react-native-device-info';
 import { storage } from "../../../libs/storage";
 import { appStateModel } from "../../../entities/appState/AppStateModel";
+import { links } from "../../../utils/Links";
 
 const isIOS = Platform.OS === 'ios';
 
@@ -12,7 +12,7 @@ const getMinimalAndRecommendedVersion = async (): Promise<{ minimalVersion: stri
     try {
         let minimalVersion = '';
         let recommendedVersion = '';
-        const response = await requester.get(links.APP_VERSIONS);
+        const response = await requester.get(links.appVersions);
         if (response.data) {
             minimalVersion = isIOS ? response.data.minimalVersionIOS : response.data.minimalVersionAndroid;
             recommendedVersion = isIOS ? response.data.recommendedVersionIOS : response.data.recommendedVersionAndroid;
