@@ -1,56 +1,80 @@
-## Run on Android ##
+# React Native Folder Structure
 
-1) ```Open a new bash shell```
-2) ```npm install```
-3) ```npm run android```
+When starting a new React Native project, one of the first things you should do is establish a folder structure that will help organize your code and assets. Having a well-organized folder structure can help you and your team maintain the code and make it more readable and reusable. In this section, we'll look at a suggested folder structure for your React Native project.
 
-## Run on iOS ##
 
-1) Open a new bash shell
-2) ```npm install```
-3) ```cd ios```
-4) ```rm -rf ~/Library/Caches/CocoaPods Pods ~/Library/Developer/Xcode/DerivedData/*; pod deintegrate; pod setup; pod install;```
-5) ```open in folder ios filename extension with .xcworkspace```
+- `assets`
+- `src`
+    - `entities`
+    - `hooks`
+    - `libs`
+    - `modules`
+        - `module1`
+            - `presenter`
+            - `ui`
+        - `module2`
+            - `presenter`
+            - `ui`
+            - `useCases`
+        - ...
+    - `navigation`
+        - `rootNavigator`
+        - `stackNavigator`
+        - `tabNavigator`
+    - `UIKit`
+    - `UIProvider`
+    - `utils`
+    - `App.tsx`
+- `index.js`
 
-## Create apk ##
 
-1) ```cd android```
-2) ```./gradlew assembleRelease```
+In conclusion, establishing a well-organized folder structure is an important part of setting up a new React Native project. By following the suggested folder structure outlined above, you can keep your code and assets organized, make your code more readable and reusable, and make it easier for other developers to understand and contribute to your project. Having separate folders for assets, source code, business data models, reusable hooks, third-party library implementations, modules, navigation, reusable components, UI context, and utility functions can help keep your codebase manageable and maintainable.
 
-## Add gradlew for ios
-1) ```cd android```
-2) ```chmod +x gradlew```
+## assets
 
-## Create react-native component from SVG ## 
-1) Instal library ```npm install -g msvgc```
-2) Convert file from root dir ```msvgc -f  ./src/assets/fileName.svg -o ./src/assets/ --react-native```
+The `assets` folder is where you will keep all of your static assets, such as images, fonts, and other media files. Having a separate folder for assets can help you quickly find the files you need and keep your code organized.
 
-## Run e2e on Android ##
-1) Open a new bash shell
-2) ```npm install```
-3) ```cd Android```
-4) ```./gradlew clean```
-5) ```npm run android```
-6) Open a new bash shell
-7) ```cd Android```
-8) ```./gradlew assembleAndroidTest```
-9) ```npm run detox-debug```
+## src
 
-# Errors #
+The `src` folder is where you will keep all of your source code. Inside the `src` folder, you can create additional folders for different parts of your application. For example, you might create a `modules (screens)` folder for all of your application screens, a `UIKit (components)` folder for reusable components, and a `entities (repository)` folder for your data access layer. Avoid putting all of your code in one folder, as it can quickly become disorganized and difficult to maintain.
 
-## ios - build ```Unknown type name 'BN_ULONG'``` ##
+## entities (repository)
 
-1) add pod 'OpenSSL-Universal', '~>1.0.2.20'
-2) pod install
+The `entities (repository)` folder is an important part of your project where you can keep all of your business data models. This is where you would store all of your models, reducers, entity interface and any other data-related files. By having all of your data-related files in one folder, you can easily find and modify data-related code. This can be especially useful when you have a large project with many files and you need to keep everything organized. Additionally, having a clear and organized file structure can make it easier for other developers to understand your code and contribute to your project if needed. 
 
-link https://github.com/facebook/react-native/issues/30922
+## hooks
 
-## Fix error for running debbuger
+The `hooks` folder is where you will keep all of your reusable hooks. These are hooks that you will use across multiple components in your application. Each hook should have its own file.
 
-1) npm cache verify
-2) npm run android --reset-cache or npm run android --reset-cache
+## libs
 
-# Optimization #
+The `libs` folder is where you will keep all of your implementation of third party libraries. For example, you might create a `requestor` folder for `axios` or other network request libraries, a `storage` folder for `AsyncStorage` or other storage-related libraries, and so on. Keeping all of your third-party library implementation files in one folder can help you quickly find and modify the code related to a specific library.
 
-1) Add  **useNativeDriver:true** to package ***react-native-actionsheet***
-path **eact-native-actionsheet -> lib -> ActionSheetCustom** : line 68 and 76
+## modules
+
+The `modules` folder is where we keep all the different modules of our app, such as authentication flow containing (authorization, registration, and password restoration screens), profile, settings, etc. Each module should have its own folder, containing two subfolders: `ui` and `presenter` and sometimes `useCases`.
+
+The `ui` folder is where we keep all of the screens and UI components which use only this module.
+
+The `presenter` folder is where we keep the presentation logic for each screen. This can include state management and calling business logic from `useCases`. 
+
+The `useCases` folder can also be included in this folder for additional business logic.
+
+## navigation
+
+The `navigation` folder is where you will keep `rootNavigator` and other navigators which we are using in our projects like stack or tab navigator
+
+## UIKit (components)
+
+The `UIKit (components)` folder is where you will keep all of your reusable components. These are components that you will use across multiple screens in your application. Each component should have its own folder, with the component file, any related stylesheets.
+
+## UIProvider
+
+The `UIProvider` folder is where we keep all the context related to UI. This can include context for localisation and color scheme.
+
+## utils
+
+The `utils` folder is where you will keep all of your utility functions. These are functions that you will use across multiple parts of your application.
+
+
+In conclusion, establishing a well-organized folder structure is an important part of setting up a new React Native project. By following the suggested folder structure outlined above, you can keep your code and assets organized, make your code more readable and reusable, and make it easier for other developers to understand and contribute to your project. Having separate folders for assets, source code, business data models, reusable hooks, third-party library implementations, modules, navigation, reusable components, UI context, and utility functions can help keep your codebase manageable and maintainable.
