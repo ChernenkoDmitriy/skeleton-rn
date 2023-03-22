@@ -2,16 +2,16 @@ import { observer } from 'mobx-react';
 import React, { FC, useMemo } from 'react';
 import { useUiContext } from '../../../../src/UIProvider';
 import { ScreenContainer } from '../../../UIKit/screenContainer';
-import { BiometricButton } from '../components/biometricButton';
 import { NumericKeyboard } from '../../../UIKit/numericKeyboard';
 import { getStyle } from './styles';
-import { PinCodeBlock } from '../components/pinCodeBlock';
 import { useEnterPinCode } from '../../presenters/useEnterPinCode';
+import { BiometricButton } from './components/biometricButton';
+import { PinCodeBlock } from './components/pinCodeBlock';
 
 export const EnterPinCodeView: FC = observer(({ }) => {
     const { colors, t } = useUiContext();
     const styles = useMemo(() => getStyle(colors), [colors]);
-    const { pinCode, cellCount, isStrongPin, isLoading, pinError, setPinError, setPinCode,
+    const { pinCode, cellCount, isStrongPin, isLoading, setPinCode,
         onChangePinCodeType, authenticationByBiometric } = useEnterPinCode();
 
     return (

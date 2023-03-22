@@ -2,9 +2,9 @@ import React, { Dispatch, FC, SetStateAction, useMemo, ReactNode } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { getStyle } from './styles';
 import { useUiContext } from '../../../src/UIProvider';
-import { KeyboardDeleteIcon } from '../../../assets/icons/KeyboardDeleteIcon';
+import { DeleteIcon } from './DeleteIcon';
 import { NumericButton } from './NumericButton';
-import { DotIcon } from '../../../assets/icons/DotIcon';
+import { DotIcon } from './DotIcon';
 
 interface IProps {
     value: string;
@@ -12,18 +12,19 @@ interface IProps {
     customButton?: ReactNode;
     iconsColor?: string;
     containerStyles?: ViewStyle;
+    isValidate?: boolean;
     buttonContainerStyles?: ViewStyle;
     buttonStyles?: ViewStyle;
     buttonTextStyles?: ViewStyle;
     setValue: Dispatch<SetStateAction<string>>;
 }
 
-export const NumericKeyboard: FC<IProps> = ({ value, maxLength = 0, containerStyles, customButton, iconsColor, buttonContainerStyles, buttonStyles, buttonTextStyles, setValue }) => {
+export const NumericKeyboard: FC<IProps> = ({ value, maxLength = 0, isValidate, containerStyles, customButton, iconsColor, buttonContainerStyles, buttonStyles, buttonTextStyles, setValue }) => {
     const { colors } = useUiContext();
     const styles = useMemo(() => getStyle(colors), [colors]);
 
-    const onPress = (keyValue: string) => {
-        if (!maxLength || value.length < maxLength || keyValue === 'delete' || keyValue === 'clear') {
+    const onValidatePress = (keyValue: string) => {
+        if (value.length < maxLength || keyValue === 'delete' || keyValue === 'clear') {
             if (keyValue === 'delete') {
                 setValue(prev => prev.slice(0, -1));
             } else if (keyValue === '.') {
@@ -32,11 +33,33 @@ export const NumericKeyboard: FC<IProps> = ({ value, maxLength = 0, containerSty
                 } else if (!value.includes('.')) {
                     setValue(prev => prev + keyValue);
                 };
+            } else if (keyValue === 'clear') {
+                setValue('');
             } else if (value === '0' && keyValue === '0') {
                 setValue('0')
             } else {
                 setValue(prev => prev + keyValue);
             };
+        };
+    };
+
+    const onNotValidatePress = (keyValue: string) => {
+        if (value.length < maxLength || keyValue === 'delete' || keyValue === 'clear') {
+            if (keyValue === 'delete') {
+                setValue(prev => prev.slice(0, -1));
+            } else if (keyValue === 'clear') {
+                setValue('');
+            } else {
+                setValue(prev => prev + keyValue);
+            };
+        };
+    };
+
+    const onPress = (keyValue: string) => {
+        if (isValidate) {
+            onValidatePress(keyValue);
+        } else {
+            onNotValidatePress(keyValue);
         };
     };
 
@@ -69,7 +92,7 @@ export const NumericKeyboard: FC<IProps> = ({ value, maxLength = 0, containerSty
                     : <NumericButton onPress={onPress} value={'.'} icon={<DotIcon color={iconsColor || colors.titleText} />} buttonContainerStyles={buttonContainerStyles} buttonStyles={buttonStyles} buttonTextStyles={buttonTextStyles} />
                 }
                 <NumericButton onPress={onPress} value={'0'} buttonContainerStyles={buttonContainerStyles} buttonStyles={buttonStyles} buttonTextStyles={buttonTextStyles} />
-                <NumericButton onLongPress={onLongDeletePress} onPress={onPress} value={'delete'} icon={<KeyboardDeleteIcon color={iconsColor || colors.titleText} />} buttonContainerStyles={buttonContainerStyles} buttonStyles={buttonStyles} buttonTextStyles={buttonTextStyles} />
+                <NumericButton onLongPress={onLongDeletePress} onPress={onPress} value={'delete'} icon={<DeleteIcon color={iconsColor || colors.titleText} />} buttonContainerStyles={buttonContainerStyles} buttonStyles={buttonStyles} buttonTextStyles={buttonTextStyles} />
             </View>
         </View>
     )

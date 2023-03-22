@@ -7,7 +7,7 @@ interface IProps {
     color?: string;
 }
 
-export const KeyboardDeleteIcon: FC<IProps> = ({ width, height, color }) => (
+export const DeleteIcon: FC<IProps> = ({ width, height, color }) => (
     <Svg
         viewBox='0 0 32 32'
         width={width || 32}
