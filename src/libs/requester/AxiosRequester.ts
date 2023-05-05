@@ -4,14 +4,36 @@ import { IRequester } from ".";
 import { userModel } from "../../entities/user/User";
 
 class AxiosRequester implements IRequester {
-    private static instance: AxiosRequester;
+    private queue: any[] = [];
+    private busy: boolean = false;
 
-    constructor() {
-        if (AxiosRequester.instance) {
-            return AxiosRequester.instance;
+    requestQueue = async (method: 'POST' | 'GET', url: string, data?: object, headers?: object, timeoutMS?: number): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            this.queue.push({ method, url, data, headers, timeoutMS, resolve, reject });
+            if (!this.busy) {
+                this.processQueue();
+            }
+        });
+    };
+
+    private processQueue = async () => {
+        this.busy = true;
+        while (this.queue.length > 0) {
+            const request = this.queue.shift();
+            try {
+                if (request?.method === 'GET') {
+                    const response = await this.get(request.url, request.data, request.headers, request.timeoutMS);
+                    request.resolve(response);
+                } else if (request?.method === 'POST') {
+                    const response = await this.post(request.url, request.data, request.headers, request.timeoutMS);
+                    request.resolve(response);
+                }
+            } catch (error) {
+                request.reject(error);
+            }
         }
-        AxiosRequester.instance = this;
-    }
+        this.busy = false;
+    };
 
     private serverError = (status: number) => {
         if (status >= 500) {
