@@ -13,8 +13,8 @@ class Localization implements ILocalization {
         this.i18n = new I18n();
         this.i18n.enableFallback = true;
         this.i18n.translations = translations;
-        this.load().then(() => this.setLanguageByDeviceLocale());
-    }
+        this.load();
+    };
 
     private setLanguageByDeviceLocale(defaultLocale: string = 'en') {
         try {
@@ -33,13 +33,16 @@ class Localization implements ILocalization {
     }
 
     private load = async () => {
-        this.storage.get('LANGUAGE')
-            .then(data => { data && this.localizationStore.save(data); })
-            .catch(error => console.warn('Localization -> load: ', error));
-        this.storage.get('TRANSLATIONS')
-            .then(data => { if (data) { this.i18n.translations = data; } })
-            .catch(error => console.warn('Localization:TRANSLATIONS -> load: ', error));
-    }
+        const language = await this.storage.get('LANGUAGE');
+        if (language) {
+            this.localizationStore.save(language);
+        };
+        const translations = await this.storage.get('TRANSLATIONS');
+        if (translations) {
+            this.i18n.translations = translations;
+        };
+        this.setLanguageByDeviceLocale();
+    };
 
     private persistLanguage = (data: string | null) => {
         if (data) {
