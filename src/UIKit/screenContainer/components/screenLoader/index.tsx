@@ -15,9 +15,3 @@ export const ScreenLoader: FC<IProps> = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-
-    }
-}); 

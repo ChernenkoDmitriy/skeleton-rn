@@ -1,18 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { TInsets } from './types/TInsets';
 
-export const getStyle = (rootContainerBackground: string, containerBackground: string) => {
+export const getStyle = (containerBackground: string | undefined) => {
     const styles = StyleSheet.create({
-        rootContainer: {
-            flex: 1,
-            backgroundColor: rootContainerBackground,
-        },
         container: {
             flex: 1,
             backgroundColor: containerBackground,
         },
         contentContainerStyle: {
             flexGrow: 1,
+            paddingTop: 0,
+            paddingBottom: 0
         },
     });
     return styles;
