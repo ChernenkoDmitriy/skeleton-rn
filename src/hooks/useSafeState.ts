@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useSafeState<T>(defaultValue: T): [T, (value: T | ((value: T) => T)) => void] {
     const [state, setState] = useState<T>(defaultValue);

@@ -1,3 +1,3 @@
 export interface IStorageCleanAll {
-    cleanAll: (services:object) => Promise<void>;
+    cleanAll: (services: string[]) => Promise<void>;
 }
