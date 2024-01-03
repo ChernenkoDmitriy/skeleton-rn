@@ -11,17 +11,15 @@ class AsyncStoreStorage implements IStorage {
         AsyncStoreStorage.instance = this;
     }
 
-    cleanAll = async (services: object) => {
+    cleanAll = async (services: string[]) => {
         try {
-            if (typeof services === 'object' && services) {
-                Object.keys(services).forEach(async key => await AsyncStorage.removeItem(key));
-            }
+            await AsyncStorage.multiRemove(services);
         } catch (error) {
             console.warn('AsyncStoreStorage -> cleanAll: ', error);
         }
     }
 
-    get = async (service: string = '') => {
+    get = async (service: string) => {
         try {
             let payload = await AsyncStorage.getItem(service) as any;
             if (payload) {
@@ -34,7 +32,7 @@ class AsyncStoreStorage implements IStorage {
         }
     }
 
-    set = async (service: string = '', payload: object | string | number) => {
+    set = async (service: string, payload: object | string | number | Array<any> | boolean) => {
         try {
             const payloadJSON = JSON.stringify(payload)
             await AsyncStorage.setItem(service, payloadJSON);
@@ -45,7 +43,7 @@ class AsyncStoreStorage implements IStorage {
         }
     }
 
-    remove = async (service: string = '') => {
+    remove = async (service: string) => {
         try {
             await AsyncStorage.removeItem(service);
             return true;
